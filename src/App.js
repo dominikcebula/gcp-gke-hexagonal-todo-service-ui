@@ -1,12 +1,13 @@
-import './App.css';
+import * as React from "react";
+import AppTopBar from "./AppTopBar";
+import TodosList from "./TodosList";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        Hello
-      </header>
-    </div>
+    <>
+      <AppTopBar />
+      <TodosList />
+    </>
   );
 }
 
