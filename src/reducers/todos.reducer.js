@@ -8,13 +8,37 @@ const initialState = [
   { id: 5, name: "Clean the garage", completed: false },
 ];
 
+const actions = {
+  TODO_ITEM_ADDED: "TODO_ITEM_ADDED",
+};
+
 function todosReducer(state, action) {
-  switch (action) {
+  switch (action.id) {
+    case actions.TODO_ITEM_ADDED:
+      return todoItemAdded(state, action);
     default:
       return state;
   }
 }
 
+function todoItemAdded(state, action) {
+  return state;
+}
+
 export function useTodosReducer() {
-  return React.useReducer(todosReducer, initialState);
+  const [state, dispatch] = React.useReducer(todosReducer, initialState);
+
+  function handleAddTodoItem(todoItemName) {
+    dispatch({
+      id: actions.TODO_ITEM_ADDED,
+      todoItemName: todoItemName,
+    });
+  }
+
+  return {
+    todoItems: state,
+    actions: {
+      handleAddTodoItem,
+    },
+  };
 }

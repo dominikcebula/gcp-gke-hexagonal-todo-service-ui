@@ -9,30 +9,15 @@ import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-export default function TodosList() {
-  const [checked, setChecked] = React.useState([0]);
-
-  const handleToggle = (value) => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-
-    setChecked(newChecked);
-  };
-
+export default function TodosList({ todoItems }) {
   return (
     <List>
-      {[0, 1, 2, 3].map((value) => {
-        const labelId = `checkbox-list-label-${value}`;
+      {todoItems.map((todoItem) => {
+        const labelId = `todo-item-${todoItem.id}`;
 
         return (
           <ListItem
-            key={value}
+            key={todoItem.id}
             secondaryAction={
               <>
                 <IconButton edge="end" aria-label="edit">
@@ -45,21 +30,17 @@ export default function TodosList() {
             }
             disablePadding
           >
-            <ListItemButton
-              role={undefined}
-              onClick={handleToggle(value)}
-              dense
-            >
+            <ListItemButton role={undefined} dense>
               <ListItemIcon>
                 <Checkbox
                   edge="start"
-                  checked={checked.indexOf(value) !== -1}
+                  checked={todoItem.completed}
                   tabIndex={-1}
                   disableRipple
                   inputProps={{ "aria-labelledby": labelId }}
                 />
               </ListItemIcon>
-              <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
+              <ListItemText id={labelId} primary={todoItem.name} />
             </ListItemButton>
           </ListItem>
         );
