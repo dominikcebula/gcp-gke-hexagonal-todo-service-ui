@@ -22,7 +22,21 @@ function todosReducer(state, action) {
 }
 
 function todoItemAdded(state, action) {
-  return state;
+  const newTodoItem = createNewTodoItem(state, action);
+
+  return [...state, newTodoItem];
+}
+
+function createNewTodoItem(state, action) {
+  return {
+    id: getNextTodoItemId(state),
+    name: action.todoItemName,
+    completed: false,
+  };
+}
+
+function getNextTodoItemId(state) {
+  return Math.max(state.map((item) => item.id)) + 1;
 }
 
 export function useTodosReducer() {
