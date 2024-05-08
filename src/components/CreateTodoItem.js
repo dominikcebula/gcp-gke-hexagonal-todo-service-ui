@@ -7,8 +7,10 @@ export default function CreateTodoItem({ actions }) {
   const [newTaskName, setNewTaskName] = React.useState("");
 
   function handleAddTodoItemButtonClicked() {
-    actions.handleAddTodoItem(newTaskName);
-    setNewTaskName("");
+    if (newTaskName.trim().length > 0) {
+      actions.handleAddTodoItem(newTaskName);
+      setNewTaskName("");
+    }
   }
 
   return (

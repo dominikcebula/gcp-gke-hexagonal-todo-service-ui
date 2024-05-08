@@ -7,8 +7,12 @@ import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-export default function TodoListItem({todoItem}) {
+export default function TodoListItem({ todoItem, actions }) {
   const labelId = `todo-item-${todoItem.id}`;
+
+  function handleDeleteTodoItemClicked(todoItemId) {
+    actions.handleRemoveTodoItem(todoItemId);
+  }
 
   return (
     <ListItem
@@ -18,7 +22,11 @@ export default function TodoListItem({todoItem}) {
           <IconButton edge="end" aria-label="edit">
             <EditIcon />
           </IconButton>
-          <IconButton edge="end" aria-label="delete">
+          <IconButton
+            edge="end"
+            aria-label="delete"
+            onClick={() => handleDeleteTodoItemClicked(todoItem.id)}
+          >
             <DeleteIcon />
           </IconButton>
         </>

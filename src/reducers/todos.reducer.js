@@ -10,12 +10,15 @@ const initialState = [
 
 const actions = {
   TODO_ITEM_ADDED: "TODO_ITEM_ADDED",
+  TODO_ITEM_REMOVED: "TODO_ITEM_REMOVED",
 };
 
 function todosReducer(state, action) {
   switch (action.id) {
     case actions.TODO_ITEM_ADDED:
       return todoItemAdded(state, action);
+    case actions.TODO_ITEM_REMOVED:
+      return todoItemRemoved(state, action);
     default:
       return state;
   }
@@ -36,7 +39,13 @@ function createNewTodoItem(state, action) {
 }
 
 function getNextTodoItemId(state) {
-  return Math.max(state.map((item) => item.id)) + 1;
+  const todoItemsIds = state.map((item) => item.id);
+
+  return Math.max(...todoItemsIds) + 1;
+}
+
+function todoItemRemoved(state, action) {
+  return state.filter((item) => item.id !== action.todoItemId);
 }
 
 export function useTodosReducer() {
@@ -49,10 +58,18 @@ export function useTodosReducer() {
     });
   }
 
+  function handleRemoveTodoItem(todoItemId) {
+    dispatch({
+      id: actions.TODO_ITEM_REMOVED,
+      todoItemId: todoItemId,
+    });
+  }
+
   return {
     todoItems: state,
     actions: {
       handleAddTodoItem,
+      handleRemoveTodoItem,
     },
   };
 }

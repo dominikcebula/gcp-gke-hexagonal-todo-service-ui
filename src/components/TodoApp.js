@@ -9,7 +9,7 @@ export default function TodoApp({ todoItems, actions }) {
       <AppTopBar />
       <Container maxWidth="sm" sx={{ marginTop: "1rem" }}>
         <CreateTodoItem actions={actions} />
-        <TodosList todoItems={todoItems} />
+        <TodosList todoItems={todoItems} actions={actions} />
       </Container>
     </>
   );
