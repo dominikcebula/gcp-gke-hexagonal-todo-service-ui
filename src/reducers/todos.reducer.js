@@ -1,20 +1,17 @@
 import * as React from "react";
 
-const initialState = [
-  { id: 1, name: "Buy groceries", completed: false },
-  { id: 2, name: "Finish report for work presentation", completed: true },
-  { id: 3, name: "Renew library books", completed: false },
-  { id: 4, name: "Pay utility bills", completed: true },
-  { id: 5, name: "Clean the garage", completed: false },
-];
+const initialState = [];
 
 const actions = {
+  TODO_ITEMS_RETRIEVED: "TODO_ITEMS_RETRIEVED",
   TODO_ITEM_ADDED: "TODO_ITEM_ADDED",
   TODO_ITEM_REMOVED: "TODO_ITEM_REMOVED",
 };
 
 function todosReducer(state, action) {
   switch (action.id) {
+    case actions.TODO_ITEMS_RETRIEVED:
+      return todoItemsRetrieved(action);
     case actions.TODO_ITEM_ADDED:
       return todoItemAdded(state, action);
     case actions.TODO_ITEM_REMOVED:
@@ -22,6 +19,10 @@ function todosReducer(state, action) {
     default:
       return state;
   }
+}
+
+function todoItemsRetrieved(action) {
+  return action.todoItemsData;
 }
 
 function todoItemAdded(state, action) {
@@ -51,6 +52,13 @@ function todoItemRemoved(state, action) {
 export function useTodosReducer() {
   const [state, dispatch] = React.useReducer(todosReducer, initialState);
 
+  function handleTodoItemsRetrieved(todoItemsData) {
+    dispatch({
+      id: actions.TODO_ITEMS_RETRIEVED,
+      todoItemsData: todoItemsData,
+    });
+  }
+
   function handleAddTodoItem(todoItemName) {
     dispatch({
       id: actions.TODO_ITEM_ADDED,
@@ -68,6 +76,7 @@ export function useTodosReducer() {
   return {
     todoItems: state,
     actions: {
+      handleTodoItemsRetrieved,
       handleAddTodoItem,
       handleRemoveTodoItem,
     },
