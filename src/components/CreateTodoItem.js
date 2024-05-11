@@ -2,14 +2,24 @@ import * as React from "react";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
+import { createTodoItem } from "../apis/TodoServiceAPI";
 
 export default function CreateTodoItem({ actions }) {
   const [newTaskName, setNewTaskName] = React.useState("");
 
+  function onTodoItemCreated(todoItem) {
+    actions.handleAddTodoItem(todoItem);
+    setNewTaskName("");
+  }
+
   function handleAddTodoItemButtonClicked() {
     if (newTaskName.trim().length > 0) {
-      actions.handleAddTodoItem(newTaskName);
-      setNewTaskName("");
+      const todoItemToCreate = {
+        name: newTaskName,
+        completed: false,
+      };
+
+      createTodoItem(todoItemToCreate, onTodoItemCreated);
     }
   }
 

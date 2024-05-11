@@ -1,11 +1,11 @@
 import * as React from "react";
 import List from "@mui/material/List";
 import TodoListItem from "./TodoListItem";
-import { getTodos } from "../apis/TodoServiceAPI";
+import { getTodoItems } from "../apis/TodoServiceAPI";
 
 export default function TodosList({ todoItems, actions }) {
   React.useEffect(() => {
-    getTodos((data) => {
+    getTodoItems((data) => {
       actions.handleTodoItemsRetrieved(data);
     });
   }, []);

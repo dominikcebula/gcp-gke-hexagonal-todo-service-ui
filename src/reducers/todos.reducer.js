@@ -26,23 +26,9 @@ function todoItemsRetrieved(action) {
 }
 
 function todoItemAdded(state, action) {
-  const newTodoItem = createNewTodoItem(state, action);
+  const newTodoItem = action.todoItem;
 
   return [...state, newTodoItem];
-}
-
-function createNewTodoItem(state, action) {
-  return {
-    id: getNextTodoItemId(state),
-    name: action.todoItemName,
-    completed: false,
-  };
-}
-
-function getNextTodoItemId(state) {
-  const todoItemsIds = state.map((item) => item.id);
-
-  return Math.max(...todoItemsIds) + 1;
 }
 
 function todoItemRemoved(state, action) {
@@ -59,10 +45,10 @@ export function useTodosReducer() {
     });
   }
 
-  function handleAddTodoItem(todoItemName) {
+  function handleAddTodoItem(todoItem) {
     dispatch({
       id: actions.TODO_ITEM_ADDED,
-      todoItemName: todoItemName,
+      todoItem: todoItem,
     });
   }
 
