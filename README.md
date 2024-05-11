@@ -12,8 +12,10 @@ This project contains Frontend UI code for [gcp-gke-hexagonal-todo-service](http
 - MUI
 - NPM
 - notistack
-- React Testing Library (planned)
-- Mock Service Worker (planned)
+- axios
+- Jest
+- React Testing Library
+- Mock Service Worker
 
 # Code structure
 
