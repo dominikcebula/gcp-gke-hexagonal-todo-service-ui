@@ -1,28 +1,23 @@
 import { enqueueSnackbar, closeSnackbar } from "notistack";
+import axios from "axios";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 
 export function getTodoItems(onTodoItemsRetrieved) {
-  fetch("/todos")
+  axios
+    .get("/todos")
     .then((response) => expectStatusCode(response, 200))
-    .then((response) => response.json())
-    .then((data) => onTodoItemsRetrieved(data))
+    .then((response) => onTodoItemsRetrieved(response.data))
     .catch((error) => {
       handleError("Error occurred while fetching todo items.", error);
     });
 }
 
 export function createTodoItem(todoItem, onTodoItemCreated) {
-  fetch("/todos", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(todoItem),
-  })
+  axios
+    .post("/todos", todoItem)
     .then((response) => expectStatusCode(response, 201))
-    .then((response) => response.json())
-    .then((data) => onTodoItemCreated(data))
+    .then((response) => onTodoItemCreated(response.data))
     .catch((error) => {
       handleError("Error occurred while creating todo item.", error);
     });
@@ -33,27 +28,20 @@ export function updateTodoItemById(
   todoItemData,
   onTodoItemUpdated
 ) {
-  fetch(`/todos/${todoItemId}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(todoItemData),
-  })
+  axios
+    .put(`/todos/${todoItemId}`, todoItemData)
     .then((response) => expectOneOfStatusCodes(response, [200, 201]))
-    .then((response) => response.json())
-    .then((data) => onTodoItemUpdated(data))
+    .then((response) => onTodoItemUpdated(response.data))
     .catch((error) => {
       handleError("Error occurred while updating todo item.", error);
     });
 }
 
 export function deleteTodoItemById(todoItemId, onTodoItemDeleted) {
-  fetch(`/todos/${todoItemId}`, {
-    method: "DELETE",
-  })
+  axios
+    .delete(`/todos/${todoItemId}`)
     .then((response) => expectStatusCode(response, 204))
-    .then((data) => onTodoItemDeleted(todoItemId))
+    .then((response) => onTodoItemDeleted(todoItemId))
     .catch((error) => {
       handleError("Error occurred while deleting todo item.", error);
     });
