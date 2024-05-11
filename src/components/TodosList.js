@@ -8,6 +8,7 @@ export default function TodosList({ todoItems, actions }) {
     getTodoItems((data) => {
       actions.handleTodoItemsRetrieved(data);
     });
+    // eslint-disable-next-line
   }, []);
 
   return (
