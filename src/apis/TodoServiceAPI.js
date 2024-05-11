@@ -1,10 +1,14 @@
+import { enqueueSnackbar, closeSnackbar } from "notistack";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+
 export function getTodoItems(onTodoItemsRetrieved) {
   fetch("/todos")
     .then((response) => expectStatusCode(response, 200))
     .then((response) => response.json())
     .then((data) => onTodoItemsRetrieved(data))
     .catch((error) => {
-      console.error("Error occurred while fetching todo items.", error);
+      handleError("Error occurred while fetching todo items.", error);
     });
 }
 
@@ -20,7 +24,7 @@ export function createTodoItem(todoItem, onTodoItemCreated) {
     .then((response) => response.json())
     .then((data) => onTodoItemCreated(data))
     .catch((error) => {
-      console.error("Error occurred while creating todo item.", error);
+      handleError("Error occurred while creating todo item.", error);
     });
 }
 
@@ -40,7 +44,7 @@ export function updateTodoItemById(
     .then((response) => response.json())
     .then((data) => onTodoItemUpdated(data))
     .catch((error) => {
-      console.error("Error occurred while updating todo item.", error);
+      handleError("Error occurred while updating todo item.", error);
     });
 }
 
@@ -51,7 +55,7 @@ export function deleteTodoItemById(todoItemId, onTodoItemDeleted) {
     .then((response) => expectStatusCode(response, 204))
     .then((data) => onTodoItemDeleted(todoItemId))
     .catch((error) => {
-      console.error("Error occurred while deleting todo item.", error);
+      handleError("Error occurred while deleting todo item.", error);
     });
 }
 
@@ -71,4 +75,17 @@ function expectOneOfStatusCodes(response, statusCodes) {
     );
 
   return response;
+}
+
+function handleError(errorMessage, error) {
+  const action = (snackbarId) => (
+    <>
+      <IconButton aria-label="delete" onClick={() => closeSnackbar(snackbarId)}>
+        <CloseIcon />
+      </IconButton>
+    </>
+  );
+
+  console.error(errorMessage, error);
+  enqueueSnackbar(errorMessage, { variant: "error", action });
 }
