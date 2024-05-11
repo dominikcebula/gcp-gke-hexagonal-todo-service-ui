@@ -14,8 +14,15 @@ export default function TodoListItem({ todoItem, actions }) {
     setEditable(true);
   }
 
-  function handleFinishEditingTodoItemClicked() {
+  function handleFinishEditingTodoItemClicked(newTodoItemName) {
     setEditable(false);
+
+    const updatedTodoItem = {
+      ...todoItem,
+      name: newTodoItemName,
+    };
+
+    updateTodoItemById(todoItem.id, updatedTodoItem, onTodoItemUpdated);
   }
 
   function onTodoItemUpdated(todoItem) {
