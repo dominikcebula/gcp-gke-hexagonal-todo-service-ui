@@ -29,14 +29,13 @@ export default function TodoListItem({ todoItem, actions }) {
     actions.handleRemoveTodoItem(todoItemId);
   }
 
-  function handleDeleteTodoItemClicked(todoItemId) {
+  function handleDeleteTodoItemClicked(event, todoItemId) {
     deleteTodoItemById(todoItemId, onTodoItemDeleted);
   }
 
   return (
     <ListItem
       key={todoItem.id}
-      onClick={() => toggleTodoItemCompletedState(todoItem)}
       secondaryAction={
         <>
           <IconButton edge="end" aria-label="edit">
@@ -45,7 +44,7 @@ export default function TodoListItem({ todoItem, actions }) {
           <IconButton
             edge="end"
             aria-label="delete"
-            onClick={() => handleDeleteTodoItemClicked(todoItem.id)}
+            onClick={(e) => handleDeleteTodoItemClicked(e, todoItem.id)}
           >
             <DeleteIcon />
           </IconButton>
@@ -58,6 +57,7 @@ export default function TodoListItem({ todoItem, actions }) {
           <Checkbox
             edge="start"
             checked={todoItem.completed}
+            onClick={() => toggleTodoItemCompletedState(todoItem)}
             tabIndex={-1}
             disableRipple
             inputProps={{ "aria-labelledby": labelId }}
