@@ -6,12 +6,17 @@ import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { deleteTodoItemById } from "../apis/TodoServiceAPI";
 
 export default function TodoListItem({ todoItem, actions }) {
   const labelId = `todo-item-${todoItem.id}`;
 
-  function handleDeleteTodoItemClicked(todoItemId) {
+  function onTodoItemDeleted(todoItemId) {
     actions.handleRemoveTodoItem(todoItemId);
+  }
+
+  function handleDeleteTodoItemClicked(todoItemId) {
+    deleteTodoItemById(todoItemId, onTodoItemDeleted);
   }
 
   return (

@@ -18,6 +18,16 @@ export function createTodoItem(todoItem, onTodoItemCreated) {
     .then((response) => response.json())
     .then((data) => onTodoItemCreated(data))
     .catch((error) => {
-      console.error("Error occurred while fetching todo items.", error);
+      console.error("Error occurred while creating todo item.", error);
+    });
+}
+
+export function deleteTodoItemById(todoItemId, onTodoItemDeleted) {
+  fetch(`/todos/${todoItemId}`, {
+    method: "DELETE",
+  })
+    .then((data) => onTodoItemDeleted(todoItemId))
+    .catch((error) => {
+      console.error("Error occurred while deleting todo item.", error);
     });
 }
