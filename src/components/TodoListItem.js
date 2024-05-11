@@ -6,10 +6,24 @@ import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { updateTodoItemById } from "../apis/TodoServiceAPI";
 import { deleteTodoItemById } from "../apis/TodoServiceAPI";
 
 export default function TodoListItem({ todoItem, actions }) {
   const labelId = `todo-item-${todoItem.id}`;
+
+  function onTodoItemUpdated(todoItem) {
+    actions.handleUpdateTodoItem(todoItem);
+  }
+
+  function toggleTodoItemCompletedState(todoItem) {
+    const updatedTodoItem = {
+      ...todoItem,
+      completed: !todoItem.completed,
+    };
+
+    updateTodoItemById(todoItem.id, updatedTodoItem, onTodoItemUpdated);
+  }
 
   function onTodoItemDeleted(todoItemId) {
     actions.handleRemoveTodoItem(todoItemId);
@@ -22,6 +36,7 @@ export default function TodoListItem({ todoItem, actions }) {
   return (
     <ListItem
       key={todoItem.id}
+      onClick={() => toggleTodoItemCompletedState(todoItem)}
       secondaryAction={
         <>
           <IconButton edge="end" aria-label="edit">

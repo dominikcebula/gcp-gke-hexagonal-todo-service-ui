@@ -22,6 +22,25 @@ export function createTodoItem(todoItem, onTodoItemCreated) {
     });
 }
 
+export function updateTodoItemById(
+  todoItemId,
+  todoItemData,
+  onTodoItemUpdated
+) {
+  fetch(`/todos/${todoItemId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(todoItemData),
+  })
+    .then((response) => response.json())
+    .then((data) => onTodoItemUpdated(data))
+    .catch((error) => {
+      console.error("Error occurred while updating todo item.", error);
+    });
+}
+
 export function deleteTodoItemById(todoItemId, onTodoItemDeleted) {
   fetch(`/todos/${todoItemId}`, {
     method: "DELETE",
