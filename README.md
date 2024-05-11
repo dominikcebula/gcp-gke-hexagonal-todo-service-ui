@@ -1,3 +1,5 @@
+[![CI Pipeline](https://github.com/dominikcebula/gcp-gke-hexagonal-todo-service-ui/actions/workflows/node.js.yml/badge.svg)](https://github.com/dominikcebula/gcp-gke-hexagonal-todo-service-ui/actions/workflows/node.js.yml)
+
 # Introduction
 
 This project contains Frontend UI code for [gcp-gke-hexagonal-todo-service](https://github.com/dominikcebula/gcp-gke-hexagonal-todo-service).
