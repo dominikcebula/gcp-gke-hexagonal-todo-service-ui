@@ -1,16 +1,22 @@
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import Checkbox from "@mui/material/Checkbox";
-import IconButton from "@mui/material/IconButton";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
+import React from "react";
+
 import { updateTodoItemById } from "../apis/TodoServiceAPI";
 import { deleteTodoItemById } from "../apis/TodoServiceAPI";
+import TodoListItemText from "./TodoListItemText";
+import TodoListItemEdit from "./TodoListItemEdit";
 
 export default function TodoListItem({ todoItem, actions }) {
   const labelId = `todo-item-${todoItem.id}`;
+
+  const [isEditable, setEditable] = React.useState(false);
+
+  function handleEditTodoItemClicked() {
+    setEditable(true);
+  }
+
+  function handleFinishEditingTodoItemClicked() {
+    setEditable(false);
+  }
 
   function onTodoItemUpdated(todoItem) {
     actions.handleUpdateTodoItem(todoItem);
@@ -29,42 +35,27 @@ export default function TodoListItem({ todoItem, actions }) {
     actions.handleRemoveTodoItem(todoItemId);
   }
 
-  function handleDeleteTodoItemClicked(event, todoItemId) {
+  function handleDeleteTodoItemClicked(todoItemId) {
     deleteTodoItemById(todoItemId, onTodoItemDeleted);
   }
 
-  return (
-    <ListItem
-      key={todoItem.id}
-      secondaryAction={
-        <>
-          <IconButton edge="end" aria-label="edit">
-            <EditIcon />
-          </IconButton>
-          <IconButton
-            edge="end"
-            aria-label="delete"
-            onClick={(e) => handleDeleteTodoItemClicked(e, todoItem.id)}
-          >
-            <DeleteIcon />
-          </IconButton>
-        </>
-      }
-      disablePadding
-    >
-      <ListItemButton role={undefined} dense>
-        <ListItemIcon>
-          <Checkbox
-            edge="start"
-            checked={todoItem.completed}
-            onClick={() => toggleTodoItemCompletedState(todoItem)}
-            tabIndex={-1}
-            disableRipple
-            inputProps={{ "aria-labelledby": labelId }}
-          />
-        </ListItemIcon>
-        <ListItemText id={labelId} primary={todoItem.name} />
-      </ListItemButton>
-    </ListItem>
-  );
+  if (!isEditable) {
+    return (
+      <TodoListItemText
+        labelId={labelId}
+        todoItem={todoItem}
+        handleEditTodoItemClicked={handleEditTodoItemClicked}
+        handleDeleteTodoItemClicked={handleDeleteTodoItemClicked}
+        toggleTodoItemCompletedState={toggleTodoItemCompletedState}
+      />
+    );
+  } else {
+    return (
+      <TodoListItemEdit
+        labelId={labelId}
+        todoItem={todoItem}
+        handleFinishEditingTodoItemClicked={handleFinishEditingTodoItemClicked}
+      />
+    );
+  }
 }
