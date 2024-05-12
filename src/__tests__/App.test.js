@@ -10,7 +10,7 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
-test("should load and display application correctly", async () => {
+test("should load and display tasks correctly", async () => {
   render(<App />);
 
   const todoTasksList = await screen.findByRole("list");
@@ -18,12 +18,16 @@ test("should load and display application correctly", async () => {
   const { findAllByRole } = within(todoTasksList);
 
   const todoTaskItems = await findAllByRole("listitem");
-  const todoTaskItemsNames = todoTaskItems.map((item) => item.textContent);
+  const todoTaskItemsData = todoTaskItems.map(toTodoTaskItemData);
 
   expect(todoTaskItems).toHaveLength(3);
-  expect(todoTaskItemsNames).toEqual([
-    "Buy groceries",
-    "Pay utility bills",
-    "Clean the garage",
+  expect(todoTaskItemsData).toEqual([
+    { name: "Buy groceries", completed: true },
+    { name: "Pay utility bills", completed: false },
+    { name: "Clean the garage", completed: true },
   ]);
 });
+
+function toTodoTaskItemData(task) {
+  return {};
+}
