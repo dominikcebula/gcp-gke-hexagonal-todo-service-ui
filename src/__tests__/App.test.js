@@ -59,6 +59,20 @@ test("should create multiple new tasks", async () => {
   ]);
 });
 
+test("should mark task as completed", async () => {
+  render(<App />);
+
+  await markTaskAsCompleted("Pay utility bills");
+
+  const todoTaskItemsData = await getTodoTaskItemsData();
+
+  expect(todoTaskItemsData).toEqual([
+    { name: "Buy groceries", completed: true },
+    { name: "Pay utility bills", completed: true },
+    { name: "Clean the garage", completed: true },
+  ]);
+});
+
 async function findTaskList() {
   return await screen.findByRole("list");
 }
@@ -79,6 +93,15 @@ async function createNewTodoItem(newTodoItemName) {
     target: { value: newTodoItemName },
   });
   await fireEvent.click(createTodoItemButton);
+}
+
+async function markTaskAsCompleted(todoTaskName) {
+  const todoItem = await screen.findByText(todoTaskName);
+  const todoItemCheckbox = await within(todoItem.parentNode.parentNode).findByRole(
+    "checkbox"
+  );
+
+  await fireEvent.click(todoItemCheckbox);
 }
 
 async function getTodoTaskItemsData() {
