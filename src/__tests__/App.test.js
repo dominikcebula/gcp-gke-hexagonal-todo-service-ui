@@ -10,7 +10,7 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
-test("Loads and displays application correctly", async () => {
+test("should load and display application correctly", async () => {
   render(<App />);
 
   const todoTasksList = await screen.findByRole("list");
