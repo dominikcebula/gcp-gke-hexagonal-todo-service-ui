@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import { getHandlers } from "../mocks/handlers";
 import { setupServer } from "msw/node";
 import App from "../App";
@@ -10,17 +10,11 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
-test("should load and display tasks correctly", async () => {
+test("should load and display sample tasks correctly", async () => {
   render(<App />);
 
-  const todoTasksList = await screen.findByRole("list");
+  const todoTaskItemsData = await getTodoTaskItemsData();
 
-  const { findAllByRole } = within(todoTasksList);
-
-  const todoTaskItems = await findAllByRole("listitem");
-  const todoTaskItemsData = todoTaskItems.map(toTodoTaskItemData);
-
-  expect(todoTaskItems).toHaveLength(3);
   expect(todoTaskItemsData).toEqual([
     { name: "Buy groceries", completed: true },
     { name: "Pay utility bills", completed: false },
@@ -28,6 +22,36 @@ test("should load and display tasks correctly", async () => {
   ]);
 });
 
-function toTodoTaskItemData(task) {
-  return {};
+async function getTodoTaskItemsData() {
+  const todoTasksList = await findTaskList();
+  const todoTaskItems = await findTaskListItems(todoTasksList);
+
+  const todoTaskItemsData = await Promise.all(
+    todoTaskItems.map(async (task) => {
+      return await toTodoTaskItemData(task);
+    })
+  );
+
+  return todoTaskItemsData;
+}
+
+async function findTaskList() {
+  return await screen.findByRole("list");
+}
+
+async function findTaskListItems(todoTasksList) {
+  const { findAllByRole } = within(todoTasksList);
+  const todoTaskItems = await findAllByRole("listitem");
+  return todoTaskItems;
+}
+
+async function toTodoTaskItemData(todoTask) {
+  const { findByRole } = within(todoTask);
+
+  const todoTaskCheckbox = await findByRole("checkbox");
+
+  return {
+    name: todoTask.textContent,
+    completed: todoTaskCheckbox.checked,
+  };
 }
