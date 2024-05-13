@@ -60,6 +60,17 @@ export const handlers = [
       return res(ctx.status(201), ctx.json(body));
     }
   }),
+  rest.delete("/todos/:todoId", async (req, res, ctx) => {
+    const todoId = req.params.todoId;
+
+    if (containsTodoItemId(todoId)) {
+      removeExistingItem(todoId);
+
+      return res(ctx.status(204));
+    } else {
+      return res(ctx.status(404));
+    }
+  }),
 ];
 
 function containsTodoItemId(todoItemId) {
@@ -80,5 +91,11 @@ function updateExistingItem(body, todoId) {
     } else {
       return item;
     }
+  });
+}
+
+function removeExistingItem(todoId) {
+  state = state.filter((item) => {
+    return item.id !== todoId;
   });
 }

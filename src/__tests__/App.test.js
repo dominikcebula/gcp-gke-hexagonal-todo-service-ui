@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, fireEvent, within } from "@testing-library/react";
+import { render, screen, fireEvent, within, waitForElementToBeRemoved } from "@testing-library/react";
 import { resetState, handlers } from "../mocks/handlers";
 import { setupServer } from "msw/node";
 import App from "../App";
@@ -103,6 +103,19 @@ test("should reverse all tasks completion state", async () => {
   ]);
 });
 
+test("should delete task", async () => {
+  render(<App />);
+
+  await deleteTask("Pay utility bills");
+
+  const todoTaskItemsData = await getTodoTaskItemsData();
+
+  expect(todoTaskItemsData).toEqual([
+    { name: "Buy groceries", completed: true },
+    { name: "Clean the garage", completed: true },
+  ]);
+});
+
 async function findTaskList() {
   return await screen.findByRole("list");
 }
@@ -123,6 +136,18 @@ async function createNewTodoItem(newTodoItemName) {
     target: { value: newTodoItemName },
   });
   await fireEvent.click(createTodoItemButton);
+}
+
+async function deleteTask(taskName) {
+  const task = await screen.findByText(taskName);
+
+  const deleteButton = await within(
+    task.parentNode.parentNode.parentNode
+  ).findByRole("button", { name: "delete" });
+
+  await fireEvent.click(deleteButton);
+
+  await waitForElementToBeRemoved(() => screen.queryByText(taskName));
 }
 
 async function clickTaskCheckbox(todoTaskName) {
