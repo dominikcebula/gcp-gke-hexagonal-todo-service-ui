@@ -28,6 +28,7 @@ export default function TodoListItemEdit({
       <TextField
         id={labelId}
         value={todoItemName}
+        aria-label="todo-item-new-name"
         onChange={(event) => setTodoItemName(event.target.value)}
       />
     </ListItem>
