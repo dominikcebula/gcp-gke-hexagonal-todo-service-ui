@@ -1,5 +1,11 @@
 import React from "react";
-import { render, screen, fireEvent, within, waitForElementToBeRemoved } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  within,
+  waitForElementToBeRemoved,
+} from "@testing-library/react";
 import { resetState, handlers } from "../mocks/handlers";
 import { setupServer } from "msw/node";
 import App from "../App";
@@ -103,7 +109,7 @@ test("should reverse all tasks completion state", async () => {
   ]);
 });
 
-test("should delete task", async () => {
+test("should delete single task", async () => {
   render(<App />);
 
   await deleteTask("Pay utility bills");
@@ -114,6 +120,31 @@ test("should delete task", async () => {
     { name: "Buy groceries", completed: true },
     { name: "Clean the garage", completed: true },
   ]);
+});
+
+test("should delete multiple tasks", async () => {
+  render(<App />);
+
+  await deleteTask("Pay utility bills");
+  await deleteTask("Clean the garage");
+
+  const todoTaskItemsData = await getTodoTaskItemsData();
+
+  expect(todoTaskItemsData).toEqual([
+    { name: "Buy groceries", completed: true },
+  ]);
+});
+
+test("should delete all tasks", async () => {
+  render(<App />);
+
+  await deleteTask("Buy groceries");
+  await deleteTask("Pay utility bills");
+  await deleteTask("Clean the garage");
+
+  const taskList = await screen.queryByText("list");
+
+  expect(taskList).toBeNull();
 });
 
 async function findTaskList() {
