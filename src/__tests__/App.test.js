@@ -62,7 +62,7 @@ test("should create multiple new tasks", async () => {
 test("should mark task as completed", async () => {
   render(<App />);
 
-  await markTaskAsCompleted("Pay utility bills");
+  await clickTaskCheckbox("Pay utility bills");
 
   const todoTaskItemsData = await getTodoTaskItemsData();
 
@@ -70,6 +70,36 @@ test("should mark task as completed", async () => {
     { name: "Buy groceries", completed: true },
     { name: "Pay utility bills", completed: true },
     { name: "Clean the garage", completed: true },
+  ]);
+});
+
+test("should mark task as uncompleted", async () => {
+  render(<App />);
+
+  await clickTaskCheckbox("Clean the garage");
+
+  const todoTaskItemsData = await getTodoTaskItemsData();
+
+  expect(todoTaskItemsData).toEqual([
+    { name: "Buy groceries", completed: true },
+    { name: "Pay utility bills", completed: false },
+    { name: "Clean the garage", completed: false },
+  ]);
+});
+
+test("should reverse all tasks completion state", async () => {
+  render(<App />);
+
+  await clickTaskCheckbox("Buy groceries");
+  await clickTaskCheckbox("Pay utility bills");
+  await clickTaskCheckbox("Clean the garage");
+
+  const todoTaskItemsData = await getTodoTaskItemsData();
+
+  expect(todoTaskItemsData).toEqual([
+    { name: "Buy groceries", completed: false },
+    { name: "Pay utility bills", completed: true },
+    { name: "Clean the garage", completed: false },
   ]);
 });
 
@@ -95,11 +125,11 @@ async function createNewTodoItem(newTodoItemName) {
   await fireEvent.click(createTodoItemButton);
 }
 
-async function markTaskAsCompleted(todoTaskName) {
+async function clickTaskCheckbox(todoTaskName) {
   const todoItem = await screen.findByText(todoTaskName);
-  const todoItemCheckbox = await within(todoItem.parentNode.parentNode).findByRole(
-    "checkbox"
-  );
+  const todoItemCheckbox = await within(
+    todoItem.parentNode.parentNode
+  ).findByRole("checkbox");
 
   await fireEvent.click(todoItemCheckbox);
 }
