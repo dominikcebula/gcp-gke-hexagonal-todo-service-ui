@@ -27,7 +27,6 @@ export default function CreateTodoItem({ actions }) {
     <Grid container spacing={2}>
       <Grid item xs={10}>
         <TextField
-          id="createTodoItemTextField"
           label="Enter new task here..."
           variant="standard"
           sx={{ width: "100%", height: "100%" }}
@@ -36,7 +35,7 @@ export default function CreateTodoItem({ actions }) {
         />
       </Grid>
       <Grid item xs={2}>
-        <Button id="createTodoItemButton" variant="contained" onClick={handleAddTodoItemButtonClicked}>
+        <Button variant="contained" onClick={handleAddTodoItemButtonClicked}>
           Add
         </Button>
       </Grid>

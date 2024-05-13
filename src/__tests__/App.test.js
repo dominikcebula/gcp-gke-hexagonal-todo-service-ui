@@ -142,13 +142,13 @@ test("should delete all tasks", async () => {
   await deleteTask("Pay utility bills");
   await deleteTask("Clean the garage");
 
-  const taskList = await screen.queryByText("list");
+  const taskList = await screen.queryByText("list", { name: "tasks-list" });
 
   expect(taskList).toBeNull();
 });
 
 async function findTaskList() {
-  return await screen.findByRole("list");
+  return await screen.findByRole("list", { name: "tasks-list" });
 }
 
 async function findTaskListItems(todoTasksList) {

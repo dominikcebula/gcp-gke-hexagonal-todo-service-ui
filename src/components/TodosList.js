@@ -12,7 +12,7 @@ export default function TodosList({ todoItems, actions }) {
   }, []);
 
   return (
-    <List>
+    <List aria-label="tasks-list">
       {todoItems.map((todoItem) => {
         return (
           <TodoListItem
