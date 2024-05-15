@@ -16,6 +16,7 @@ export default function TodoListItemText({
 }) {
   return (
     <ListItem
+      aria-label="task-list-item"
       key={todoItem.id}
       secondaryAction={
         <>
@@ -40,6 +41,7 @@ export default function TodoListItemText({
       <ListItemButton role={undefined} dense>
         <ListItemIcon>
           <Checkbox
+            aria-label="task-list-item-checkbox"
             edge="start"
             checked={todoItem.completed}
             onClick={() => toggleTodoItemCompletedState(todoItem)}
@@ -48,7 +50,7 @@ export default function TodoListItemText({
             inputProps={{ "aria-labelledby": labelId }}
           />
         </ListItemIcon>
-        <ListItemText id={labelId} primary={todoItem.name} />
+        <ListItemText aria-label="task-list-item-text" id={labelId} primary={todoItem.name} />
       </ListItemButton>
     </ListItem>
   );
