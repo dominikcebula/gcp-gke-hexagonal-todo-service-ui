@@ -1,6 +1,13 @@
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, within, fireEvent } from "@testing-library/react";
 import TodoListItem from "../TodoListItem";
 import "@testing-library/jest-dom";
+
+jest.mock("../../apis/TodoServiceAPI", () => {
+  return {
+    deleteTodoItemById: (todoItemId, onTodoItemDeleted) =>
+      onTodoItemDeleted(todoItemId),
+  };
+});
 
 const sampleTodoItem = {
   id: "9af9499f-d7eb-458d-94d0-02ce809dc904",
@@ -50,6 +57,15 @@ test("should have todo item with unchecked checkbox", async () => {
   expect(listItemCheckbox.checked).toBeFalsy();
 });
 
+test("should delete todo item", async () => {
+  render(<TodoListItem todoItem={sampleTodoItem} actions={actions} />);
+
+  await clickDeleteButton();
+
+  expect(actions.handleRemoveTodoItem.mock.calls).toHaveLength(1);
+  expect(actions.handleRemoveTodoItem.mock.calls[0][0]).toBe(sampleTodoItem.id);
+});
+
 async function findTaskListItem() {
   return await screen.findByLabelText("task-list-item-text");
 }
@@ -58,4 +74,14 @@ async function findTaskListItemCheckbox() {
   return await within(
     await screen.findByLabelText("task-list-item-checkbox")
   ).findByRole("checkbox");
+}
+
+async function clickDeleteButton() {
+  const deleteButton = await findDeleteButton();
+
+  fireEvent.click(deleteButton);
+}
+
+async function findDeleteButton() {
+  return await screen.findByRole("button", { name: "delete" });
 }
