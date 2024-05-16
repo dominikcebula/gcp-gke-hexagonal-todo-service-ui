@@ -57,6 +57,16 @@ test("should have todo item with unchecked checkbox", async () => {
   expect(listItemCheckbox.checked).toBeFalsy();
 });
 
+test("should enter deletion state", async () => {
+  render(<TodoListItem todoItem={sampleTodoItem} actions={actions} />);
+
+  await clickEditButton();
+
+  const editField = await findEditTextField();
+
+  expect(editField.value).toEqual(sampleTodoItem.name);
+});
+
 test("should delete todo item", async () => {
   render(<TodoListItem todoItem={sampleTodoItem} actions={actions} />);
 
@@ -76,6 +86,16 @@ async function findTaskListItemCheckbox() {
   ).findByRole("checkbox");
 }
 
+async function clickEditButton() {
+  const editButton = await findEditButton();
+
+  fireEvent.click(editButton);
+}
+
+async function findEditButton() {
+  return await screen.findByRole("button", { name: "edit" });
+}
+
 async function clickDeleteButton() {
   const deleteButton = await findDeleteButton();
 
@@ -84,4 +104,10 @@ async function clickDeleteButton() {
 
 async function findDeleteButton() {
   return await screen.findByRole("button", { name: "delete" });
+}
+
+async function findEditTextField() {
+  return await within(
+    await screen.findByLabelText("todo-item-new-name")
+  ).findByRole("textbox");
 }
