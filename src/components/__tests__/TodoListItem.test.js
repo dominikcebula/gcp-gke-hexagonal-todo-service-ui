@@ -4,6 +4,8 @@ import "@testing-library/jest-dom";
 
 jest.mock("../../apis/TodoServiceAPI", () => {
   return {
+    updateTodoItemById: (todoItemId, todoItemData, onTodoItemUpdated) =>
+      onTodoItemUpdated(todoItemData),
     deleteTodoItemById: (todoItemId, onTodoItemDeleted) =>
       onTodoItemDeleted(todoItemId),
   };
@@ -67,6 +69,21 @@ test("should enter edit state", async () => {
   expect(editField.value).toEqual(sampleTodoItem.name);
 });
 
+test("should edit todo item", async () => {
+  render(<TodoListItem todoItem={sampleTodoItem} actions={actions} />);
+
+  await clickEditButton();
+  const editField = await findEditTextField();
+  await setValueInTextField(editField, "Clean the garage");
+  await clickCheckButton();
+
+  expect(actions.handleUpdateTodoItem.mock.calls).toHaveLength(1);
+  expect(actions.handleUpdateTodoItem.mock.calls[0][0]).toEqual({
+    ...sampleTodoItem,
+    name: "Clean the garage",
+  });
+});
+
 test("should delete todo item", async () => {
   render(<TodoListItem todoItem={sampleTodoItem} actions={actions} />);
 
@@ -110,4 +127,19 @@ async function findEditTextField() {
   return await within(
     await screen.findByLabelText("todo-item-new-name")
   ).findByRole("textbox");
+}
+
+async function setValueInTextField(textField, newValue) {
+  await fireEvent.change(textField, {
+    target: { value: newValue },
+  });
+}
+
+async function clickCheckButton() {
+  const checkButton = await findCheckButton();
+  await fireEvent.click(checkButton);
+}
+
+async function findCheckButton() {
+  return await screen.findByRole("button", { name: "check" });
 }
