@@ -59,6 +59,46 @@ test("should have todo item with unchecked checkbox", async () => {
   expect(listItemCheckbox.checked).toBeFalsy();
 });
 
+test("should mark todo item as completed", async () => {
+  const uncheckedTodoItem = {
+    ...sampleTodoItem,
+    completed: false,
+  };
+
+  render(<TodoListItem todoItem={uncheckedTodoItem} actions={actions} />);
+
+  const listItemCheckbox = await findTaskListItemCheckbox();
+  expect(listItemCheckbox.checked).toBeFalsy();
+
+  await fireEvent.click(listItemCheckbox);
+
+  expect(actions.handleUpdateTodoItem.mock.calls).toHaveLength(1);
+  expect(actions.handleUpdateTodoItem.mock.calls[0][0]).toEqual({
+    ...sampleTodoItem,
+    completed: true,
+  });
+});
+
+test("should mark todo item as uncompleted", async () => {
+  const checkedTodoItem = {
+    ...sampleTodoItem,
+    completed: true,
+  };
+
+  render(<TodoListItem todoItem={checkedTodoItem} actions={actions} />);
+
+  const listItemCheckbox = await findTaskListItemCheckbox();
+  expect(listItemCheckbox.checked).toBeTruthy();
+
+  await fireEvent.click(listItemCheckbox);
+
+  expect(actions.handleUpdateTodoItem.mock.calls).toHaveLength(1);
+  expect(actions.handleUpdateTodoItem.mock.calls[0][0]).toEqual({
+    ...sampleTodoItem,
+    completed: false,
+  });
+});
+
 test("should enter edit state", async () => {
   render(<TodoListItem todoItem={sampleTodoItem} actions={actions} />);
 
