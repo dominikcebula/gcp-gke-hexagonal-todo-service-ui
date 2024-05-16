@@ -57,7 +57,7 @@ test("should have todo item with unchecked checkbox", async () => {
   expect(listItemCheckbox.checked).toBeFalsy();
 });
 
-test("should enter deletion state", async () => {
+test("should enter edit state", async () => {
   render(<TodoListItem todoItem={sampleTodoItem} actions={actions} />);
 
   await clickEditButton();
